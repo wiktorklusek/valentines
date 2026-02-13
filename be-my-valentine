@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💐 Click the Icons</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Montserrat:wght@400;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #ff1493 0%, #ff69b4 50%, #ffb6c1 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        h1 {
+            color: white;
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 3px 3px 12px rgba(199, 21, 133, 0.4);
+            animation: fadeInDown 0.8s ease-out;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 1.2em;
+            margin-bottom: 40px;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .game-section {
+            background: white;
+            border-radius: 25px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            margin-bottom: 30px;
+            animation: slideUp 0.6s ease-out 0.3s both;
+        }
+
+        .game-title {
+            font-size: 1.6em;
+            color: #ff1493;
+            margin-bottom: 25px;
+            font-weight: bold;
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 1px;
+        }
+
+        .order-info {
+            color: #ff69b4;
+            font-size: 0.95em;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .icons-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .clickable-icon {
+            font-size: 3.5em;
+            cursor: pointer;
+            padding: 15px;
+            border: 3px solid #ffb6c1;
+            border-radius: 15px;
+            transition: all 0.3s;
+            background: #fff5f7;
+            user-select: none;
+            position: relative;
+        }
+
+        .clickable-icon:hover {
+            transform: scale(1.1);
+            border-color: #ff1493;
+            box-shadow: 0 8px 20px rgba(255, 20, 147, 0.3);
+        }
+
+        .clickable-icon:active {
+            transform: scale(0.95);
+        }
+
+        .clickable-icon.selected {
+            background: linear-gradient(135deg, #ff1493 0%, #ff69b4 100%);
+            border-color: #ff1493;
+            transform: scale(1.05);
+        }
+
+        .order-display {
+            background: #fff5f7;
+            border: 3px dashed #ff69b4;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .order-slot {
+            font-size: 2.5em;
+            opacity: 0.5;
+            transition: all 0.3s;
+        }
+
+        .order-slot.filled {
+            opacity: 1;
+            animation: pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes pop {
+            0% {
+                transform: scale(0) rotateZ(-180deg);
+                opacity: 0;
+            }
+            70% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 20px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .check-btn {
+            background: linear-gradient(135deg, #ff1493 0%, #ff69b4 100%);
+            color: white;
+        }
+
+        .check-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 20, 147, 0.4);
+        }
+
+        .check-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .reset-btn {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .reset-btn:hover {
+            background: #d0d0d0;
+            transform: translateY(-2px);
+        }
+
+        .message-box {
+            display: none;
+            color: #ff1493;
+            font-weight: bold;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1.1em;
+        }
+
+        .message-box.error {
+            display: block;
+            background: #ffe0ec;
+            border: 2px solid #ff69b4;
+        }
+
+        .message-box.success {
+            display: block;
+            background: #ffe0ec;
+            border: 2px solid #ff1493;
+        }
+
+        .compliment-box {
+            min-height: 60px;
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            margin-bottom: 20px;
+            animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .compliment-box.hidden {
+            display: none;
+        }
+
+        @keyframes popIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.8) translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .compliment-text {
+            font-size: 1.5em;
+            color: #ff1493;
+            font-weight: 600;
+            line-height: 1.6;
+            letter-spacing: 0.5px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .compliment-emoji {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .grand-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+            z-index: 1000;
+        }
+
+        .grand-message.active {
+            display: block;
+            animation: grandReveal 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes grandReveal {
+            0% {
+                transform: translate(-50%, -50%) scale(0) rotateZ(-180deg);
+                opacity: 0;
+            }
+            70% {
+                transform: translate(-50%, -50%) scale(1.1) rotateZ(10deg);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1) rotateZ(0deg);
+                opacity: 1;
+            }
+        }
+
+        .grand-content {
+            background: linear-gradient(135deg, #ffffff 0%, #fff5f7 100%);
+            border-radius: 30px;
+            padding: 60px 50px;
+            box-shadow: 0 30px 80px rgba(255, 20, 147, 0.25);
+            text-align: center;
+            max-width: 600px;
+            border: 4px solid #ff1493;
+        }
+
+        .grand-emoji {
+            font-size: 6em;
+            margin-bottom: 20px;
+            animation: spin 1s ease-out;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotateY(180deg) scale(0);
+                opacity: 0;
+            }
+            100% {
+                transform: rotateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .grand-title {
+            font-size: 3em;
+            color: #ff1493;
+            font-weight: bold;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .grand-text {
+            font-size: 1.3em;
+            color: #ff69b4;
+            line-height: 1.9;
+            margin-bottom: 30px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .close-grand {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #ff1493 0%, #ff69b4 100%);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 1.1em;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .close-grand:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 20, 147, 0.4);
+        }
+
+        .grand-message .button-group {
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .celebration-dance {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+            z-index: 1001;
+            text-align: center;
+        }
+
+        .celebration-dance.active {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .dance-emoji {
+            font-size: 8em;
+            animation: dancingAnimation 0.8s ease-in-out infinite;
+        }
+
+        @keyframes dancingAnimation {
+            0%, 100% {
+                transform: translateY(0) rotateZ(-5deg);
+            }
+            25% {
+                transform: translateY(-30px) rotateZ(5deg);
+            }
+            50% {
+                transform: translateY(0) rotateZ(-5deg);
+            }
+            75% {
+                transform: translateY(-30px) rotateZ(5deg);
+            }
+        }
+
+        .celebration-text {
+            font-size: 2.5em;
+            color: white;
+            font-weight: bold;
+            text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.3);
+            margin-top: 20px;
+            animation: bounce 1s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .final-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+            z-index: 1001;
+        }
+
+        .final-message.active {
+            display: block;
+            animation: grandReveal 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .final-content {
+            background: linear-gradient(135deg, #ffffff 0%, #fff5f7 100%);
+            border-radius: 30px;
+            padding: 80px 60px;
+            box-shadow: 0 30px 80px rgba(255, 20, 147, 0.25);
+            text-align: center;
+            max-width: 650px;
+            border: 4px solid #ff1493;
+        }
+
+        .final-emoji {
+            font-size: 7em;
+            margin-bottom: 20px;
+            animation: spin 1s ease-out;
+        }
+
+        .final-title {
+            font-size: 3.5em;
+            color: #ff1493;
+            font-weight: bold;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .final-subtitle {
+            font-size: 2.2em;
+            color: #ff69b4;
+            margin-bottom: 30px;
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 1px;
+        }
+
+        .final-text {
+            font-size: 1.3em;
+            color: #333;
+            line-height: 2;
+            margin-bottom: 40px;
+            font-weight: 500;
+        }
+
+        .final-text strong {
+            color: #ff1493;
+            font-size: 1.4em;
+        }
+
+        .developer-credit {
+            border-top: 2px solid #ffb6c1;
+            padding-top: 30px;
+            margin-top: 30px;
+        }
+
+        .developer-credit p {
+            font-size: 1.1em;
+            color: #ff69b4;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 600px) {
+            .final-content {
+                padding: 50px 30px;
+                max-width: 90vw;
+            }
+
+            .final-emoji {
+                font-size: 5em;
+            }
+
+            .final-title {
+                font-size: 2.5em;
+            }
+
+            .final-subtitle {
+                font-size: 1.8em;
+            }
+
+            .final-text {
+                font-size: 1.1em;
+                line-height: 1.8;
+            }
+
+            .final-text strong {
+                font-size: 1.2em;
+            }
+
+            .developer-credit p {
+                font-size: 1em;
+            }
+        }
+
+        .footer {
+            margin-top: 50px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.95em;
+            animation: fadeInUp 1s ease-out 0.8s both;
+        }
+
+        .footer p {
+            margin: 0;
+        }
+
+        .confetti {
+            position: fixed;
+            pointer-events: none;
+            z-index: 999;
+            animation: confettiFall 2.5s ease-out forwards;
+        }
+
+        @keyframes confettiFall {
+            to {
+                transform: translateY(100vh) rotateZ(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .subtitle {
+                font-size: 1em;
+                margin-bottom: 30px;
+            }
+
+            .game-section {
+                padding: 25px;
+            }
+
+            .icons-container {
+                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+                gap: 10px;
+            }
+
+            .clickable-icon {
+                font-size: 3em;
+                padding: 10px;
+            }
+
+            .order-display {
+                gap: 10px;
+            }
+
+            .order-slot {
+                font-size: 2em;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            .grand-content {
+                padding: 40px 25px;
+                max-width: 90vw;
+            }
+
+            .grand-emoji {
+                font-size: 4em;
+            }
+
+            .grand-title {
+                font-size: 2em;
+            }
+
+            .grand-text {
+                font-size: 1.2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💐 Click the Icons</h1>
+        <p class="subtitle">Arrange them in the correct order to reveal a special message...</p>
+
+        <div class="compliment-box hidden" id="complimentBox">
+            <div class="compliment-emoji" id="complimentEmoji"></div>
+            <div class="compliment-text" id="complimentText"></div>
+        </div>
+
+        <div class="game-section">
+            <div class="game-title">🎮 Secret Order Game</div>
+            <p class="order-info">Arrange the icons in the correct order and then check!</p>
+
+            <div class="order-display" id="orderDisplay">
+                <div class="order-slot">?</div>
+                <div class="order-slot">?</div>
+                <div class="order-slot">?</div>
+                <div class="order-slot">?</div>
+                <div class="order-slot">?</div>
+            </div>
+
+            <div class="icons-container" id="iconsContainer"></div>
+
+            <div class="button-group">
+                <button class="check-btn" id="checkBtn" onclick="checkOrder()" disabled>Check Order ✓</button>
+                <button class="reset-btn" onclick="resetGame()">Reset 🔄</button>
+            </div>
+
+            <div class="message-box" id="messageBox"></div>
+        </div>
+
+        <footer class="footer">
+            <p>Made with 💕 for someone special</p>
+        </footer>
+    </div>
+
+    <div class="celebration-dance" id="celebrationDance">
+        <div class="dance-emoji">💃🕺</div>
+        <div class="celebration-text">💕 YESSS! 💕</div>
+    </div>
+
+    <div class="final-message" id="finalMessage">
+        <div class="final-content">
+            <div class="final-emoji">💕</div>
+            <div class="final-title">Game Over!</div>
+            <div class="final-subtitle">You Said Yes!</div>
+            <div class="final-text">
+                <strong>You are now my Valentine! 💕</strong>
+                <br><br>
+                Forever starts today with you. 
+                <br>
+                Thank you for playing this game created with love by me for you. 💖
+            </div>
+            <div class="developer-credit">
+                <p>💜 Made with ❤️ for someone special</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="grand-message" id="grandMessage">
+        <div class="grand-content">
+            <div class="grand-emoji">💕</div>
+            <div class="grand-title">Will You Be My Valentine?</div>
+            <div class="grand-text">
+                You're the sunshine that brightens my days, the castle of my dreams, the spice that makes life exciting, and the celebration of every moment together. And "K" is for the kiss I want to give you right now.
+                <br><br>
+                <strong>Will you be my Valentine? ❤️</strong>
+            </div>
+            <div class="button-group">
+                <button class="close-grand" onclick="handleYes('enthusiastic')">YES! 💕 (Obviously)</button>
+                <button class="close-grand" onclick="handleYes('sassy')">Duh, YES! 🙄✨</button>
+                <button class="close-grand" onclick="handleYes('dramatic')">A THOUSAND TIMES YES! 🔥👑</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const correctOrder = ['☀️', '🏰', '🌶️', 'K', '🍸'];
+        const allIcons = ['☀️', '🏰', '🌶️', 'K', '🍸'];
+        let selectedOrder = [];
+
+        const compliments = [
+            { emoji: '💕', text: 'You\'re my favorite kind of love!' },
+            { emoji: '💖', text: 'My heart skips a beat when I think of you!' },
+            { emoji: '💗', text: 'You\'re the love of my life!' },
+            { emoji: '💝', text: 'With you, every moment feels like Valentine\'s Day!' },
+            { emoji: '💞', text: 'Our love is my favorite adventure!' },
+            { emoji: '💓', text: 'You make my heart race in the best way!' },
+            { emoji: '💑', text: 'You\'re my forever person!' },
+            { emoji: '💏', text: 'You\'re worth every love song ever written!' },
+            { emoji: '💗', text: 'Being with you is pure bliss!' },
+            { emoji: '✨', text: 'You\'re my greatest love story!' },
+            { emoji: '💕', text: 'Every day with you is a gift wrapped in love!' },
+            { emoji: '💖', text: 'You complete me in every way!' },
+            { emoji: '🌹', text: 'You\'re more beautiful than a thousand roses!' },
+            { emoji: '💝', text: 'I\'m madly, deeply, completely in love with you!' },
+            { emoji: '💓', text: 'You\'re the reason my heart believes in love!' }
+        ];
+
+        function getRandomItem(array) {
+            return array[Math.floor(Math.random() * array.length)];
+        }
+
+        function createShuffledIcons() {
+            const shuffled = [...allIcons].sort(() => Math.random() - 0.5);
+            const container = document.getElementById('iconsContainer');
+            container.innerHTML = '';
+
+            shuffled.forEach((icon, index) => {
+                const iconEl = document.createElement('div');
+                iconEl.className = 'clickable-icon';
+                iconEl.textContent = icon;
+                iconEl.onclick = () => selectIcon(icon, iconEl);
+                container.appendChild(iconEl);
+            });
+        }
+
+        function selectIcon(icon, element) {
+            selectedOrder.push(icon);
+            element.classList.add('selected');
+            element.style.pointerEvents = 'none';
+            updateOrderDisplay();
+            updateCheckButton();
+        }
+
+        function updateOrderDisplay() {
+            const slots = document.querySelectorAll('.order-slot');
+            slots.forEach((slot, index) => {
+                if (index < selectedOrder.length) {
+                    slot.textContent = selectedOrder[index];
+                    slot.classList.add('filled');
+                } else {
+                    slot.textContent = '?';
+                    slot.classList.remove('filled');
+                }
+            });
+        }
+
+        function updateCheckButton() {
+            const checkBtn = document.getElementById('checkBtn');
+            checkBtn.disabled = selectedOrder.length !== correctOrder.length;
+        }
+
+        function checkOrder() {
+            const messageBox = document.getElementById('messageBox');
+            const isCorrect = JSON.stringify(selectedOrder) === JSON.stringify(correctOrder);
+
+            if (isCorrect) {
+                messageBox.className = 'message-box success';
+                messageBox.textContent = '🎉 Perfect! You found the secret order!';
+                createConfetti();
+                setTimeout(createConfetti, 300);
+                setTimeout(createConfetti, 600);
+                setTimeout(() => {
+                    revealGrandMessage();
+                }, 1500);
+            } else {
+                messageBox.className = 'message-box error';
+                messageBox.textContent = '❌ Not quite right! Try again.';
+                displayCompliment();
+            }
+        }
+
+        function resetGame() {
+            selectedOrder = [];
+            document.getElementById('messageBox').className = 'message-box';
+            document.getElementById('messageBox').textContent = '';
+            createShuffledIcons();
+            updateOrderDisplay();
+            updateCheckButton();
+        }
+
+        function createConfetti() {
+            for (let i = 0; i < 15; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                confetti.textContent = ['💕', '💖', '💗', '💓'][Math.floor(Math.random() * 4)];
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.top = '-20px';
+                confetti.style.fontSize = Math.random() * 15 + 15 + 'px';
+                confetti.style.opacity = Math.random() * 0.7 + 0.3;
+                document.body.appendChild(confetti);
+
+                setTimeout(() => confetti.remove(), 2500);
+            }
+        }
+
+        function displayCompliment() {
+            const compliment = getRandomItem(compliments);
+            const box = document.getElementById('complimentBox');
+            
+            document.getElementById('complimentEmoji').textContent = compliment.emoji;
+            document.getElementById('complimentText').textContent = compliment.text;
+            
+            box.classList.remove('hidden');
+            
+            box.style.animation = 'none';
+            setTimeout(() => {
+                box.style.animation = '';
+            }, 10);
+        }
+
+        function revealGrandMessage() {
+            const grandMessage = document.getElementById('grandMessage');
+            grandMessage.classList.add('active');
+            createConfetti();
+            setTimeout(createConfetti, 300);
+            setTimeout(createConfetti, 600);
+        }
+
+        function handleYes(style) {
+            const responses = {
+                enthusiastic: {
+                    emoji: '🎉',
+                    text: 'I knew it! You\'re the best! 💖'
+                },
+                sassy: {
+                    emoji: '💃',
+                    text: 'Of course you said yes. I\'m irresistible! 😎'
+                },
+                dramatic: {
+                    emoji: '👑',
+                    text: 'YES! You\'ve made me the happiest person alive! 🌟'
+                }
+            };
+
+            const response = responses[style];
+            const grandMessage = document.getElementById('grandMessage');
+            const grandContent = grandMessage.querySelector('.grand-content');
+            
+            // Update content
+            grandContent.innerHTML = `
+                <div class="grand-emoji">${response.emoji}</div>
+                <div class="grand-title">YES! 💕</div>
+                <div class="grand-text">${response.text}</div>
+                <button class="close-grand" onclick="startDanceParty()">Let's Celebrate! 🎊</button>
+            `;
+            
+            createConfetti();
+            setTimeout(createConfetti, 300);
+            setTimeout(createConfetti, 600);
+            setTimeout(createConfetti, 900);
+        }
+
+        function startDanceParty() {
+            const grandMessage = document.getElementById('grandMessage');
+            const celebrationDance = document.getElementById('celebrationDance');
+            
+            grandMessage.classList.remove('active');
+            celebrationDance.classList.add('active');
+            
+            // Create extra confetti
+            for (let i = 0; i < 3; i++) {
+                setTimeout(createConfetti, i * 400);
+            }
+            
+            // Show final message after dance
+            setTimeout(() => {
+                celebrationDance.classList.remove('active');
+                showFinalMessage();
+            }, 3500);
+        }
+
+        function showFinalMessage() {
+            const finalMessage = document.getElementById('finalMessage');
+            finalMessage.classList.add('active');
+            
+            // Extra confetti for final message
+            createConfetti();
+            setTimeout(createConfetti, 300);
+            setTimeout(createConfetti, 600);
+        }
+
+        function closeGrandMessage() {
+            document.getElementById('grandMessage').classList.remove('active');
+            resetGame();
+        }
+
+        // Initialize
+        createShuffledIcons();
+        updateOrderDisplay();
+    </script>
+</body>
+</html>
