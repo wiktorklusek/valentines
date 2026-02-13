@@ -20,7 +20,7 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
-            overflow: hidden;
+            overflow-y: auto;
         }
 
         .container {
@@ -259,6 +259,8 @@
             transform: translate(-50%, -50%);
             display: none;
             z-index: 1000;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         .grand-message.active {
@@ -355,6 +357,7 @@
             display: none;
             z-index: 1001;
             text-align: center;
+            pointer-events: none;
         }
 
         .celebration-dance.active {
@@ -407,6 +410,8 @@
             transform: translate(-50%, -50%);
             display: none;
             z-index: 1001;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         .final-message.active {
