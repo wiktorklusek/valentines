@@ -342,10 +342,99 @@
             border: 2px solid var(--secondary-pink);
         }
 
+        /* ==================== SUCCESS MESSAGE ENHANCEMENTS ==================== */
         .message-box.success {
             display: block;
             background: #ffe0ec;
             border: 2px solid var(--primary-pink);
+            animation: successPulse 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), successGlow 2s ease-in-out infinite;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .message-box.success::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+            pointer-events: none;
+        }
+
+        .message-box.success::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            right: -50%;
+            bottom: -50%;
+            background: radial-gradient(circle, rgba(255, 20, 147, 0.1) 0%, transparent 70%);
+            animation: radiusExpand 1.5s ease-out;
+        }
+
+        @keyframes successPulse {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes successGlow {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(255, 20, 147, 0.7);
+            }
+            50% {
+                box-shadow: 0 0 20px 10px rgba(255, 20, 147, 0.2);
+            }
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        @keyframes radiusExpand {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* Star burst effect */
+        .success-star {
+            position: absolute;
+            font-size: 1.5em;
+            animation: starBurst 1.5s ease-out forwards;
+            pointer-events: none;
+        }
+
+        @keyframes starBurst {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--tx), var(--ty)) scale(0);
+                opacity: 0;
+            }
         }
 
         /* ==================== COMPLIMENT BOX ==================== */
@@ -1303,6 +1392,10 @@ Katie, will you be my Valentine? ❤️`;
                     SoundManager.playSound('success');
                     messageBox.className = 'message-box success';
                     messageBox.textContent = '🎉 Perfect! You found the secret order!';
+                    
+                    // Add star burst effects
+                    createStarBurst(messageBox);
+                    
                     createConfetti();
                     setTimeout(createConfetti, 300);
                     setTimeout(createConfetti, 600);
@@ -1320,6 +1413,38 @@ Katie, will you be my Valentine? ❤️`;
             } catch (error) {
                 console.error('Error checking order:', error);
                 displayErrorMessage('An error occurred. Please try again.');
+            }
+        }
+
+        /**
+         * CREATE STAR BURST EFFECT
+         */
+        function createStarBurst(element) {
+            const rect = element.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            const stars = ['⭐', '✨', '💫', '🌟'];
+            const burstCount = 12;
+            
+            for (let i = 0; i < burstCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'success-star';
+                star.textContent = stars[Math.floor(Math.random() * stars.length)];
+                
+                const angle = (i / burstCount) * Math.PI * 2;
+                const distance = 150;
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance;
+                
+                star.style.left = centerX + 'px';
+                star.style.top = centerY + 'px';
+                star.style.setProperty('--tx', tx + 'px');
+                star.style.setProperty('--ty', ty + 'px');
+                
+                document.body.appendChild(star);
+                
+                setTimeout(() => star.remove(), 1500);
             }
         }
 
