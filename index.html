@@ -405,18 +405,21 @@
 
         .final-message {
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #ff1493 0%, #ff69b4 50%, #ffb6c1 100%);
             display: none;
-            z-index: 1001;
-            max-height: 90vh;
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
             overflow-y: auto;
         }
 
         .final-message.active {
-            display: block;
-            animation: grandReveal 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            animation: fadeIn 0.5s ease-out;
         }
 
         .final-content {
@@ -427,6 +430,22 @@
             text-align: center;
             max-width: 950px;
             border: 4px solid #ff1493;
+            animation: grandReveal 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .final-content button {
+            display: none;
+        }
+
+        body.game-locked {
+            overflow: hidden;
+        }
+
+        body.game-locked .container,
+        body.game-locked .grand-message,
+        body.game-locked .celebration-dance {
+            pointer-events: none !important;
+            opacity: 0.3;
         }
 
         .final-emoji {
@@ -490,6 +509,7 @@
             .final-content {
                 padding: 50px 30px;
                 max-width: 90vw;
+                margin: 20px;
             }
 
             .final-emoji {
@@ -498,23 +518,31 @@
 
             .final-title {
                 font-size: 2.5em;
+                margin-bottom: 15px;
             }
 
             .final-subtitle {
                 font-size: 1.8em;
+                margin-bottom: 20px;
             }
 
             .final-text {
-                font-size: 1.1em;
+                font-size: 1.2em;
                 line-height: 1.8;
+                margin-bottom: 30px;
             }
 
             .final-text strong {
-                font-size: 1.2em;
+                font-size: 1.3em;
             }
 
             .developer-credit p {
                 font-size: 1em;
+            }
+
+            .developer-credit .coming-soon {
+                font-size: 0.9em;
+                margin-top: 12px;
             }
         }
 
@@ -699,7 +727,15 @@
             <div class="grand-emoji">💕</div>
             <div class="grand-title">Will You Be My Valentine?</div>
             <div class="grand-text">
-                You're my sunshine, my castle, my spice, and my celebration. And "K" is for the kiss I want to give you.
+                You're my sunshine ☀️ that lights up my days.
+                <br>
+                You're my castle 🏰 where I feel safe and loved.
+                <br>
+                You're my spice 🌶️ that makes life exciting.
+                <br>
+                You're my celebration 🍸 every single moment.
+                <br>
+                And K... that's the first letter of your beautiful name.
                 <br><br>
                 <strong>Will you be my Valentine? ❤️</strong>
             </div>
@@ -901,6 +937,9 @@
         function showFinalMessage() {
             const finalMessage = document.getElementById('finalMessage');
             finalMessage.classList.add('active');
+            
+            // Lock the game - disable all interactions
+            document.body.classList.add('game-locked');
             
             // Extra confetti for final message
             createConfetti();
