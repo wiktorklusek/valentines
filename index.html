@@ -2,37 +2,142 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>💐 Click the Icons</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Montserrat:wght@400;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="description" content="Interactive Valentine's Day game where you arrange icons to reveal a romantic proposal. Perfect for asking someone to be your Valentine.">
+    <meta name="theme-color" content="#ff1493">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- Open Graph for Social Sharing -->
+    <meta property="og:title" content="Will You Be My Valentine? 💕">
+    <meta property="og:description" content="An interactive game to ask someone special to be my Valentine. Arrange the icons in the right order to reveal the romantic message!">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect fill='%23ff1493' width='200' height='200'/%3E%3Ctext x='100' y='100' font-size='80' text-anchor='middle' dominant-baseline='middle'%3E💕%3C/text%3E%3C/svg%3E">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E💕%3C/text%3E%3C/svg%3E">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <title>Will You Be My Valentine? 💕 - Interactive Love Game</title>
+    
     <style>
+        /* ==================== CSS VARIABLES & DESIGN SYSTEM ==================== */
+        :root {
+            --primary-pink: #ff1493;
+            --secondary-pink: #ff69b4;
+            --light-pink: #ffb6c1;
+            --white: #ffffff;
+            --dark-text: #333333;
+            --light-text: #666666;
+            
+            --spacing-xs: 8px;
+            --spacing-sm: 12px;
+            --spacing-md: 20px;
+            --spacing-lg: 30px;
+            --spacing-xl: 50px;
+            --spacing-2xl: 80px;
+            
+            --radius-sm: 10px;
+            --radius-md: 15px;
+            --radius-lg: 20px;
+            --radius-xl: 30px;
+            
+            --font-size-sm: 0.9em;
+            --font-size-base: 1em;
+            --font-size-lg: 1.2em;
+            --font-size-xl: 1.5em;
+            --font-size-2xl: 2.5em;
+            --font-size-3xl: 3.5em;
+            --font-size-4xl: 4em;
+            
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 10px 40px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 30px 80px rgba(255, 20, 147, 0.25);
+            
+            --transition-fast: 0.2s ease;
+            --transition-normal: 0.3s ease;
+            --transition-slow: 0.5s ease;
+        }
+
+        /* ==================== RESET & BASE STYLES ==================== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
         body {
             font-family: 'Montserrat', sans-serif;
-            background: linear-gradient(135deg, #ff1493 0%, #ff69b4 50%, #ffb6c1 100%);
+            background: linear-gradient(135deg, var(--primary-pink) 0%, var(--secondary-pink) 50%, var(--light-pink) 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: var(--spacing-md);
             overflow-y: auto;
+            color: var(--dark-text);
+            position: relative;
         }
 
+        body.game-locked {
+            overflow: hidden;
+        }
+
+        /* ==================== LOADING SCREEN ==================== */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-pink) 0%, var(--secondary-pink) 50%, var(--light-pink) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            animation: fadeOut 0.5s ease-out 1.5s forwards;
+        }
+
+        .loading-spinner {
+            font-size: 4em;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        /* ==================== CONTAINER & LAYOUT ==================== */
         .container {
             text-align: center;
             max-width: 900px;
             width: 100%;
         }
 
+        .container.disabled {
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        /* ==================== TYPOGRAPHY ==================== */
         h1 {
-            color: white;
-            font-size: 3em;
-            margin-bottom: 10px;
+            color: var(--white);
+            font-size: var(--font-size-3xl);
+            margin-bottom: var(--spacing-sm);
             text-shadow: 3px 3px 12px rgba(199, 21, 133, 0.4);
             animation: fadeInDown 0.8s ease-out;
             font-family: 'Playfair Display', serif;
@@ -42,60 +147,64 @@
 
         .subtitle {
             color: rgba(255, 255, 255, 0.95);
-            font-size: 1.2em;
-            margin-bottom: 40px;
+            font-size: var(--font-size-lg);
+            margin-bottom: var(--spacing-xl);
             animation: fadeInUp 0.8s ease-out 0.2s both;
             font-weight: 500;
             letter-spacing: 0.5px;
         }
 
+        /* ==================== GAME SECTION ==================== */
         .game-section {
-            background: white;
-            border-radius: 25px;
-            padding: 40px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-            margin-bottom: 30px;
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-xl);
+            box-shadow: var(--shadow-md);
+            margin-bottom: var(--spacing-xl);
             animation: slideUp 0.6s ease-out 0.3s both;
         }
 
         .game-title {
-            font-size: 1.6em;
-            color: #ff1493;
-            margin-bottom: 25px;
+            font-size: var(--font-size-xl);
+            color: var(--primary-pink);
+            margin-bottom: var(--spacing-lg);
             font-weight: bold;
             font-family: 'Playfair Display', serif;
             letter-spacing: 1px;
         }
 
         .order-info {
-            color: #ff69b4;
-            font-size: 0.95em;
-            margin-bottom: 20px;
+            color: var(--secondary-pink);
+            font-size: var(--font-size-sm);
+            margin-bottom: var(--spacing-lg);
             font-style: italic;
         }
 
+        /* ==================== ICONS GRID ==================== */
         .icons-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-xl);
         }
 
         .clickable-icon {
             font-size: 3.5em;
             cursor: pointer;
-            padding: 15px;
-            border: 3px solid #ffb6c1;
-            border-radius: 15px;
-            transition: all 0.3s;
+            padding: var(--spacing-lg);
+            border: 3px solid var(--light-pink);
+            border-radius: var(--radius-md);
+            transition: all var(--transition-normal);
             background: #fff5f7;
             user-select: none;
             position: relative;
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
         }
 
         .clickable-icon:hover {
             transform: scale(1.1);
-            border-color: #ff1493;
+            border-color: var(--primary-pink);
             box-shadow: 0 8px 20px rgba(255, 20, 147, 0.3);
         }
 
@@ -103,30 +212,36 @@
             transform: scale(0.95);
         }
 
+        .clickable-icon:focus {
+            outline: 2px solid var(--primary-pink);
+            outline-offset: 2px;
+        }
+
         .clickable-icon.selected {
-            background: linear-gradient(135deg, #ff1493 0%, #ff69b4 100%);
-            border-color: #ff1493;
+            background: linear-gradient(135deg, var(--primary-pink) 0%, var(--secondary-pink) 100%);
+            border-color: var(--primary-pink);
             transform: scale(1.05);
         }
 
+        /* ==================== ORDER DISPLAY ==================== */
         .order-display {
             background: #fff5f7;
-            border: 3px dashed #ff69b4;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
+            border: 3px dashed var(--secondary-pink);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
             min-height: 80px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 15px;
+            gap: var(--spacing-md);
             flex-wrap: wrap;
         }
 
         .order-slot {
             font-size: 2.5em;
             opacity: 0.5;
-            transition: all 0.3s;
+            transition: all var(--transition-normal);
         }
 
         .order-slot.filled {
@@ -148,9 +263,10 @@
             }
         }
 
+        /* ==================== BUTTONS ==================== */
         .button-group {
             display: flex;
-            gap: 15px;
+            gap: var(--spacing-md);
             justify-content: center;
             flex-wrap: wrap;
         }
@@ -158,17 +274,28 @@
         button {
             padding: 15px 35px;
             border: none;
-            border-radius: 20px;
-            font-size: 1.1em;
+            border-radius: var(--radius-lg);
+            font-size: var(--font-size-lg);
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all var(--transition-normal);
             font-family: inherit;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        button:focus {
+            outline: 2px solid var(--primary-pink);
+            outline-offset: 2px;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         .check-btn {
-            background: linear-gradient(135deg, #ff1493 0%, #ff69b4 100%);
-            color: white;
+            background: linear-gradient(135deg, var(--primary-pink) 0%, var(--secondary-pink) 100%);
+            color: var(--white);
         }
 
         .check-btn:hover:not(:disabled) {
@@ -176,14 +303,9 @@
             box-shadow: 0 8px 20px rgba(255, 20, 147, 0.4);
         }
 
-        .check-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
         .reset-btn {
             background: #e0e0e0;
-            color: #333;
+            color: var(--dark-text);
         }
 
         .reset-btn:hover {
@@ -191,35 +313,49 @@
             transform: translateY(-2px);
         }
 
+        /* ==================== MESSAGE BOX ==================== */
         .message-box {
             display: none;
-            color: #ff1493;
+            color: var(--primary-pink);
             font-weight: bold;
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 10px;
-            font-size: 1.1em;
+            margin-top: var(--spacing-lg);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-lg);
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .message-box.error {
             display: block;
             background: #ffe0ec;
-            border: 2px solid #ff69b4;
+            border: 2px solid var(--secondary-pink);
         }
 
         .message-box.success {
             display: block;
             background: #ffe0ec;
-            border: 2px solid #ff1493;
+            border: 2px solid var(--primary-pink);
         }
 
+        /* ==================== COMPLIMENT BOX ==================== */
         .compliment-box {
             min-height: 60px;
-            background: white;
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-            margin-bottom: 20px;
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            box-shadow: var(--shadow-md);
+            margin-bottom: var(--spacing-lg);
             animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
@@ -239,8 +375,8 @@
         }
 
         .compliment-text {
-            font-size: 1.5em;
-            color: #ff1493;
+            font-size: var(--font-size-xl);
+            color: var(--primary-pink);
             font-weight: 600;
             line-height: 1.6;
             letter-spacing: 0.5px;
@@ -249,9 +385,10 @@
 
         .compliment-emoji {
             font-size: 2em;
-            margin-bottom: 10px;
+            margin-bottom: var(--spacing-md);
         }
 
+        /* ==================== MODAL STYLES ==================== */
         .grand-message {
             position: fixed;
             top: 50%;
@@ -265,10 +402,10 @@
 
         .grand-message.active {
             display: block;
-            animation: grandReveal 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            animation: easterEggReveal 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        @keyframes grandReveal {
+        @keyframes easterEggReveal {
             0% {
                 transform: translate(-50%, -50%) scale(0) rotateZ(-180deg);
                 opacity: 0;
@@ -283,60 +420,73 @@
         }
 
         .grand-content {
-            background: linear-gradient(135deg, #ffffff 0%, #fff5f7 100%);
-            border-radius: 30px;
+            background: linear-gradient(135deg, var(--white) 0%, #fff5f7 100%);
+            border-radius: var(--radius-xl);
             padding: 80px 90px;
-            box-shadow: 0 30px 80px rgba(255, 20, 147, 0.25);
+            box-shadow: var(--shadow-lg);
             text-align: center;
             max-width: 950px;
-            border: 4px solid #ff1493;
+            border: 4px solid var(--primary-pink);
+            animation: grandReveal 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        .grand-emoji {
-            font-size: 7em;
-            margin-bottom: 20px;
-            animation: spin 1s ease-out;
-        }
-
-        @keyframes spin {
+        @keyframes grandReveal {
             0% {
-                transform: rotateY(180deg) scale(0);
+                transform: scale(0) rotateZ(-180deg);
                 opacity: 0;
             }
+            70% {
+                transform: scale(1.1) rotateZ(10deg);
+            }
             100% {
-                transform: rotateY(0) scale(1);
+                transform: scale(1) rotateZ(0deg);
                 opacity: 1;
             }
         }
 
+        .grand-emoji {
+            font-size: 7em;
+            margin-bottom: var(--spacing-lg);
+            animation: spin 1s ease-out;
+        }
+
         .grand-title {
-            font-size: 3.5em;
-            color: #ff1493;
+            font-size: var(--font-size-3xl);
+            color: var(--primary-pink);
             font-weight: bold;
-            margin-bottom: 20px;
+            margin-bottom: var(--spacing-lg);
             letter-spacing: 2px;
             font-family: 'Playfair Display', serif;
         }
 
         .grand-text {
-            font-size: 1.5em;
-            color: #ff69b4;
+            font-size: var(--font-size-xl);
+            color: var(--secondary-pink);
             line-height: 2.1;
-            margin-bottom: 30px;
+            margin-bottom: var(--spacing-xl);
             font-weight: 500;
             letter-spacing: 0.5px;
         }
 
+        .grand-message .button-group {
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        .grand-message .button-group button {
+            width: 100%;
+        }
+
         .close-grand {
             padding: 15px 35px;
-            background: linear-gradient(135deg, #ff1493 0%, #ff69b4 100%);
-            color: white;
+            background: linear-gradient(135deg, var(--primary-pink) 0%, var(--secondary-pink) 100%);
+            color: var(--white);
             border: none;
-            border-radius: 20px;
-            font-size: 1.15em;
+            border-radius: var(--radius-lg);
+            font-size: var(--font-size-lg);
             cursor: pointer;
             font-weight: bold;
-            transition: all 0.3s;
+            transition: all var(--transition-normal);
         }
 
         .close-grand:hover {
@@ -344,11 +494,7 @@
             box-shadow: 0 8px 20px rgba(255, 20, 147, 0.4);
         }
 
-        .grand-message .button-group {
-            flex-direction: column;
-            gap: 12px;
-        }
-
+        /* ==================== CELEBRATION & FINAL SCREEN ==================== */
         .celebration-dance {
             position: fixed;
             top: 50%;
@@ -386,11 +532,11 @@
         }
 
         .celebration-text {
-            font-size: 2.5em;
-            color: white;
+            font-size: var(--font-size-2xl);
+            color: var(--white);
             font-weight: bold;
             text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.3);
-            margin-top: 20px;
+            margin-top: var(--spacing-lg);
             animation: bounce 1s ease-in-out infinite;
         }
 
@@ -409,7 +555,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #ff1493 0%, #ff69b4 50%, #ffb6c1 100%);
+            background: linear-gradient(135deg, var(--primary-pink) 0%, var(--secondary-pink) 50%, var(--light-pink) 100%);
             display: none;
             z-index: 2000;
             align-items: center;
@@ -423,13 +569,13 @@
         }
 
         .final-content {
-            background: linear-gradient(135deg, #ffffff 0%, #fff5f7 100%);
-            border-radius: 30px;
+            background: linear-gradient(135deg, var(--white) 0%, #fff5f7 100%);
+            border-radius: var(--radius-xl);
             padding: 100px 90px;
-            box-shadow: 0 30px 80px rgba(255, 20, 147, 0.25);
+            box-shadow: var(--shadow-lg);
             text-align: center;
             max-width: 950px;
-            border: 4px solid #ff1493;
+            border: 4px solid var(--primary-pink);
             animation: grandReveal 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
@@ -437,119 +583,68 @@
             display: none;
         }
 
-        body.game-locked {
-            overflow: hidden;
-        }
-
-        body.game-locked .container,
-        body.game-locked .grand-message,
-        body.game-locked .celebration-dance {
-            pointer-events: none !important;
-            opacity: 0.3;
-        }
-
         .final-emoji {
             font-size: 8em;
-            margin-bottom: 20px;
+            margin-bottom: var(--spacing-lg);
             animation: spin 1s ease-out;
         }
 
         .final-title {
             font-size: 4em;
-            color: #ff1493;
+            color: var(--primary-pink);
             font-weight: bold;
-            margin-bottom: 10px;
+            margin-bottom: var(--spacing-md);
             letter-spacing: 2px;
             font-family: 'Playfair Display', serif;
         }
 
         .final-subtitle {
             font-size: 2.5em;
-            color: #ff69b4;
-            margin-bottom: 30px;
+            color: var(--secondary-pink);
+            margin-bottom: var(--spacing-xl);
             font-family: 'Playfair Display', serif;
             letter-spacing: 1px;
         }
 
         .final-text {
-            font-size: 1.5em;
-            color: #333;
+            font-size: var(--font-size-xl);
+            color: var(--dark-text);
             line-height: 2.2;
-            margin-bottom: 40px;
+            margin-bottom: var(--spacing-2xl);
             font-weight: 500;
         }
 
         .final-text strong {
-            color: #ff1493;
+            color: var(--primary-pink);
             font-size: 1.4em;
         }
 
         .developer-credit {
-            border-top: 2px solid #ffb6c1;
-            padding-top: 30px;
-            margin-top: 30px;
+            border-top: 2px solid var(--light-pink);
+            padding-top: var(--spacing-xl);
+            margin-top: var(--spacing-xl);
         }
 
         .developer-credit p {
-            font-size: 1.2em;
-            color: #ff69b4;
+            font-size: var(--font-size-lg);
+            color: var(--secondary-pink);
             font-weight: 600;
             letter-spacing: 0.5px;
         }
 
         .developer-credit .coming-soon {
-            font-size: 1em;
-            color: #ff1493;
-            margin-top: 15px;
+            font-size: var(--font-size-sm);
+            color: var(--primary-pink);
+            margin-top: var(--spacing-md);
             font-style: italic;
             font-weight: 500;
         }
 
-        @media (max-width: 600px) {
-            .final-content {
-                padding: 50px 30px;
-                max-width: 90vw;
-                margin: 20px;
-            }
-
-            .final-emoji {
-                font-size: 5em;
-            }
-
-            .final-title {
-                font-size: 2.5em;
-                margin-bottom: 15px;
-            }
-
-            .final-subtitle {
-                font-size: 1.8em;
-                margin-bottom: 20px;
-            }
-
-            .final-text {
-                font-size: 1.2em;
-                line-height: 1.8;
-                margin-bottom: 30px;
-            }
-
-            .final-text strong {
-                font-size: 1.3em;
-            }
-
-            .developer-credit p {
-                font-size: 1em;
-            }
-
-            .developer-credit .coming-soon {
-                font-size: 0.9em;
-                margin-top: 12px;
-            }
-        }
-
+        /* ==================== FOOTER ==================== */
         .footer {
-            margin-top: 50px;
+            margin-top: var(--spacing-2xl);
             color: rgba(255, 255, 255, 0.7);
-            font-size: 0.95em;
+            font-size: var(--font-size-sm);
             animation: fadeInUp 1s ease-out 0.8s both;
         }
 
@@ -557,6 +652,7 @@
             margin: 0;
         }
 
+        /* ==================== CONFETTI ==================== */
         .confetti {
             position: fixed;
             pointer-events: none;
@@ -568,6 +664,119 @@
             to {
                 transform: translateY(100vh) rotateZ(360deg);
                 opacity: 0;
+            }
+        }
+
+        /* ==================== MODAL OVERLAY ==================== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 999;
+        }
+
+        .modal-overlay.active {
+            display: block;
+        }
+
+        .modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-xl);
+            max-width: 500px;
+            z-index: 1000;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            display: none;
+        }
+
+        .modal.active {
+            display: block;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: var(--spacing-lg);
+            right: var(--spacing-lg);
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-title {
+            font-size: var(--font-size-xl);
+            color: var(--primary-pink);
+            margin-bottom: var(--spacing-lg);
+            font-family: 'Playfair Display', serif;
+            font-weight: bold;
+        }
+
+        .modal-content {
+            font-size: var(--font-size-base);
+            color: var(--dark-text);
+            line-height: 1.8;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .modal-content ul {
+            text-align: left;
+            margin: var(--spacing-lg) 0;
+            padding-left: var(--spacing-xl);
+        }
+
+        .modal-content li {
+            margin-bottom: var(--spacing-md);
+        }
+
+        /* ==================== AUDIO CONTROLS ==================== */
+        .audio-toggle {
+            position: fixed;
+            top: var(--spacing-lg);
+            right: var(--spacing-lg);
+            background: var(--white);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            font-size: 1.5em;
+            box-shadow: var(--shadow-md);
+            z-index: 500;
+            transition: all var(--transition-normal);
+        }
+
+        .audio-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .audio-toggle:active {
+            transform: scale(0.95);
+        }
+
+        /* ==================== ANIMATIONS ==================== */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
             }
         }
 
@@ -604,32 +813,87 @@
             }
         }
 
-        @media (max-width: 600px) {
+        /* ==================== RESPONSIVE DESIGN ==================== */
+        @media (max-width: 768px) {
             h1 {
                 font-size: 2em;
             }
 
             .subtitle {
                 font-size: 1em;
-                margin-bottom: 30px;
+                margin-bottom: var(--spacing-xl);
             }
 
             .game-section {
-                padding: 25px;
+                padding: var(--spacing-lg);
+            }
+
+            .grand-content {
+                padding: 40px 25px;
+                max-width: 90vw;
+            }
+
+            .grand-title {
+                font-size: 2em;
+            }
+
+            .grand-text {
+                font-size: var(--font-size-lg);
+                line-height: 1.8;
+            }
+
+            .final-content {
+                padding: 50px 30px;
+                max-width: 90vw;
+                margin: var(--spacing-lg);
+            }
+
+            .final-emoji {
+                font-size: 5em;
+            }
+
+            .final-title {
+                font-size: 2.5em;
+                margin-bottom: var(--spacing-md);
+            }
+
+            .final-subtitle {
+                font-size: 1.8em;
+                margin-bottom: var(--spacing-lg);
+            }
+
+            .final-text {
+                font-size: var(--font-size-lg);
+                line-height: 1.8;
+                margin-bottom: var(--spacing-xl);
+            }
+
+            .final-text strong {
+                font-size: 1.2em;
+            }
+
+            .developer-credit p {
+                font-size: var(--font-size-base);
+            }
+
+            .developer-credit .coming-soon {
+                font-size: var(--font-size-sm);
+                margin-top: var(--spacing-sm);
             }
 
             .icons-container {
                 grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-                gap: 10px;
+                gap: var(--spacing-md);
             }
 
             .clickable-icon {
                 font-size: 3em;
-                padding: 10px;
+                padding: var(--spacing-md);
             }
 
             .order-display {
-                gap: 10px;
+                gap: var(--spacing-md);
+                padding: var(--spacing-lg);
             }
 
             .order-slot {
@@ -643,29 +907,92 @@
             button {
                 width: 100%;
             }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .game-section {
+                padding: var(--spacing-lg) var(--spacing-md);
+            }
+
+            .clickable-icon {
+                font-size: 2.5em;
+                padding: var(--spacing-sm);
+            }
+
+            .order-slot {
+                font-size: 1.5em;
+            }
 
             .grand-content {
-                padding: 40px 25px;
-                max-width: 90vw;
+                padding: 30px 20px;
+                border: 3px solid var(--primary-pink);
             }
 
             .grand-emoji {
                 font-size: 4em;
             }
 
-            .grand-title {
-                font-size: 2em;
+            .final-emoji {
+                font-size: 4em;
             }
 
-            .grand-text {
-                font-size: 1.2em;
+            .dance-emoji {
+                font-size: 5em;
+            }
+        }
+
+        /* ==================== ACCESSIBILITY ==================== */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* ==================== PRINT STYLES ==================== */
+        @media print {
+            body {
+                background: var(--white);
+            }
+
+            .audio-toggle {
+                display: none;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>💐 Click the Icons</h1>
+    <!-- Loading Screen -->
+    <div class="loading-screen">
+        <div class="loading-spinner">💕</div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="modal-overlay" id="modalOverlay"></div>
+    <div class="modal" id="howToPlayModal" role="dialog" aria-labelledby="modalTitle">
+        <button class="modal-close" onclick="closeModal()" aria-label="Close modal">✕</button>
+        <h2 class="modal-title" id="modalTitle">How to Play</h2>
+        <div class="modal-content">
+            <p>Welcome to this Valentine's Day game! Here's how to play:</p>
+            <ul>
+                <li>You'll see 5 icons at the bottom</li>
+                <li>Click them in the <strong>correct order</strong></li>
+                <li>The order shows in the display box above</li>
+                <li>Once all 5 are selected, click "Check Order"</li>
+                <li>Get it right to reveal the Valentine's message!</li>
+            </ul>
+            <p style="margin-top: var(--spacing-xl); font-style: italic;">The correct order: Sunshine ☀️ → Castle 🏰 → Chilli 🌶️ → K → Martini 🍸</p>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container" id="mainContainer">
+        <h1>💐 Will You Be My Valentine?</h1>
         <p class="subtitle">Put the icons in the right order to find the secret! 💕</p>
 
         <div class="compliment-box hidden" id="complimentBox">
@@ -677,7 +1004,7 @@
             <div class="game-title">🎮 Secret Order Game</div>
             <p class="order-info">Click the icons in the right order!</p>
 
-            <div class="order-display" id="orderDisplay">
+            <div class="order-display" id="orderDisplay" role="status" aria-live="polite" aria-label="Selected icons order">
                 <div class="order-slot">?</div>
                 <div class="order-slot">?</div>
                 <div class="order-slot">?</div>
@@ -685,30 +1012,47 @@
                 <div class="order-slot">?</div>
             </div>
 
-            <div class="icons-container" id="iconsContainer"></div>
+            <div class="icons-container" id="iconsContainer" role="group" aria-label="Icons to arrange"></div>
 
             <div class="button-group">
-                <button class="check-btn" id="checkBtn" onclick="checkOrder()" disabled>Check Order ✓</button>
-                <button class="reset-btn" onclick="resetGame()">Reset 🔄</button>
+                <button class="check-btn" id="checkBtn" onclick="checkOrder()" disabled aria-label="Check if icons are in correct order">Check Order ✓</button>
+                <button class="reset-btn" onclick="resetGame()" aria-label="Reset the game">Reset 🔄</button>
+                <button class="reset-btn" onclick="openModal()" aria-label="Learn how to play">How to Play? ❓</button>
             </div>
 
-            <div class="message-box" id="messageBox"></div>
+            <div class="message-box" id="messageBox" role="alert"></div>
         </div>
 
         <footer class="footer">
-            <p>Made with 💕 for someone special</p>
+            <p>Made with 💕 just for you</p>
         </footer>
     </div>
 
-    <div class="celebration-dance" id="celebrationDance">
+    <!-- Valentine Message Modal -->
+    <div class="grand-message" id="grandMessage" role="dialog" aria-labelledby="grandTitle">
+        <div class="grand-content">
+            <div class="grand-emoji" id="grandEmoji">💕</div>
+            <div class="grand-title" id="grandTitle">Will You Be My Valentine?</div>
+            <div class="grand-text" id="grandText"></div>
+            <div class="button-group">
+                <button class="close-grand" onclick="handleYes('enthusiastic')" aria-label="Answer yes enthusiastically">YES! 💕 (Obviously)</button>
+                <button class="close-grand" onclick="handleYes('sassy')" aria-label="Answer yes sassily">Duh, YES! 🙄✨</button>
+                <button class="close-grand" onclick="handleYes('dramatic')" aria-label="Answer yes dramatically">A THOUSAND TIMES YES! 🔥👑</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Celebration Dance -->
+    <div class="celebration-dance" id="celebrationDance" aria-hidden="true">
         <div class="dance-emoji">💃🕺</div>
         <div class="celebration-text">💕 YESSS! 💕</div>
     </div>
 
-    <div class="final-message" id="finalMessage">
+    <!-- Final Message (Game Over) -->
+    <div class="final-message" id="finalMessage" role="dialog" aria-labelledby="finalTitle">
         <div class="final-content">
             <div class="final-emoji">💕</div>
-            <div class="final-title">Game Over!</div>
+            <div class="final-title" id="finalTitle">Game Over!</div>
             <div class="final-subtitle">You Said Yes!</div>
             <div class="final-text">
                 <strong>You said YES! You're my Valentine! 💕</strong>
@@ -722,44 +1066,55 @@
         </div>
     </div>
 
-    <div class="grand-message" id="grandMessage">
-        <div class="grand-content">
-            <div class="grand-emoji">💕</div>
-            <div class="grand-title">Will You Be My Valentine?</div>
-            <div class="grand-text">
-                My sunshine ☀️ in the morning light,
-                <br>
-                My princess 🏰 in the softest night.
-                <br>
-                My spice 🌶️ that makes my spirit sing,
-                <br>
-                With you, my heart finds everything.
-                <br><br>
-                My celebration 🍸 in all I do,
-                <br>
-                Katie… every road leads back to you.
-                <br>
-                You're all I need, you're all I see,
-                <br>
-                The missing piece that completes me.
-                <br><br>
-                So here I stand, heart on the line…
-                <br>
-                <strong>Katie, will you be my Valentine? ❤️</strong>
-            </div>
-            <div class="button-group">
-                <button class="close-grand" onclick="handleYes('enthusiastic')">YES! 💕 (Obviously)</button>
-                <button class="close-grand" onclick="handleYes('sassy')">Duh, YES! 🙄✨</button>
-                <button class="close-grand" onclick="handleYes('dramatic')">A THOUSAND TIMES YES! 🔥👑</button>
-            </div>
-        </div>
-    </div>
-
+    <!-- Scripts -->
     <script>
-        const correctOrder = ['☀️', '🏰', '🌶️', 'K', '🍸'];
-        const allIcons = ['☀️', '🏰', '🌶️', 'K', '🍸'];
-        let selectedOrder = [];
+        'use strict';
 
+        /**
+         * CONFIGURATION & CONSTANTS
+         */
+        const CONFIG = {
+            correctOrder: ['☀️', '🏰', '🌶️', 'K', '🍸'],
+            allIcons: ['☀️', '🏰', '🌶️', 'K', '🍸'],
+            easterEggThreshold: 8,
+            animationDelay: 1500,
+            soundEnabled: true
+        };
+
+        /**
+         * ANALYTICS TRACKING
+         */
+        class Analytics {
+            static trackEvent(eventName, data = {}) {
+                try {
+                    const event = {
+                        name: eventName,
+                        timestamp: new Date().toISOString(),
+                        ...data
+                    };
+                    console.log('[Analytics]', event);
+                    // In production, send to analytics service
+                } catch (error) {
+                    console.error('Analytics error:', error);
+                }
+            }
+        }
+
+        /**
+         * STATE MANAGEMENT
+         */
+        let gameState = {
+            selectedOrder: [],
+            iconClickCount: 0,
+            gameStartTime: null,
+            gameEndTime: null,
+            currentCompliment: null,
+            soundEnabled: true
+        };
+
+        /**
+         * COMPLIMENTS DATA
+         */
         const compliments = [
             { emoji: '💕', text: 'You\'re my favorite person!' },
             { emoji: '💖', text: 'You make my heart so happy!' },
@@ -778,37 +1133,132 @@
             { emoji: '💓', text: 'You make my heart believe in love!' }
         ];
 
+        const yesResponses = {
+            enthusiastic: {
+                emoji: '🎉',
+                text: 'I knew it! You\'re the best! 💖'
+            },
+            sassy: {
+                emoji: '💃',
+                text: 'Of course you said yes. I\'m irresistible! 😎'
+            },
+            dramatic: {
+                emoji: '👑',
+                text: 'YES! You\'ve made me the happiest person alive! 🌟'
+            }
+        };
+
+        const valentinePoem = `My sunshine ☀️ in the morning light,
+My princess 🏰 in the softest night.
+My spice 🌶️ that makes my spirit sing,
+With you, my heart finds everything.
+
+My celebration 🍸 in all I do,
+Katie… every road leads back to you.
+You're all I need, you're all I see,
+The missing piece that completes me.
+
+So here I stand, heart on the line…
+Katie, will you be my Valentine? ❤️`;
+
+        /**
+         * SOUND EFFECTS
+         */
+        class SoundManager {
+            static playSound(type) {
+                if (!gameState.soundEnabled) return;
+                try {
+                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    switch(type) {
+                        case 'click':
+                            oscillator.frequency.value = 600;
+                            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+                            break;
+                        case 'success':
+                            oscillator.frequency.value = 800;
+                            gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
+                            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+                            break;
+                        case 'error':
+                            oscillator.frequency.value = 400;
+                            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15);
+                            break;
+                    }
+                    
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.2);
+                } catch (error) {
+                    console.log('Sound not available:', error.message);
+                }
+            }
+        }
+
+        /**
+         * UTILITY FUNCTIONS
+         */
         function getRandomItem(array) {
             return array[Math.floor(Math.random() * array.length)];
         }
 
+        function openModal() {
+            document.getElementById('modalOverlay').classList.add('active');
+            document.getElementById('howToPlayModal').classList.add('active');
+            Analytics.trackEvent('how_to_play_opened');
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
+            document.getElementById('howToPlayModal').classList.remove('active');
+        }
+
+        /**
+         * GAME FUNCTIONS
+         */
         function createShuffledIcons() {
-            const shuffled = [...allIcons].sort(() => Math.random() - 0.5);
+            const shuffled = [...CONFIG.allIcons].sort(() => Math.random() - 0.5);
             const container = document.getElementById('iconsContainer');
             container.innerHTML = '';
 
-            shuffled.forEach((icon, index) => {
-                const iconEl = document.createElement('div');
+            shuffled.forEach((icon) => {
+                const iconEl = document.createElement('button');
                 iconEl.className = 'clickable-icon';
                 iconEl.textContent = icon;
-                iconEl.onclick = () => selectIcon(icon, iconEl);
+                iconEl.setAttribute('aria-label', `Icon ${icon}`);
+                iconEl.onclick = (e) => {
+                    e.preventDefault();
+                    selectIcon(icon, iconEl);
+                };
                 container.appendChild(iconEl);
             });
         }
 
         function selectIcon(icon, element) {
-            selectedOrder.push(icon);
-            element.classList.add('selected');
-            element.style.pointerEvents = 'none';
-            updateOrderDisplay();
-            updateCheckButton();
+            try {
+                gameState.selectedOrder.push(icon);
+                element.classList.add('selected');
+                element.disabled = true;
+                updateOrderDisplay();
+                updateCheckButton();
+                SoundManager.playSound('click');
+                Analytics.trackEvent('icon_selected', { icon });
+            } catch (error) {
+                console.error('Error selecting icon:', error);
+            }
         }
 
         function updateOrderDisplay() {
             const slots = document.querySelectorAll('.order-slot');
             slots.forEach((slot, index) => {
-                if (index < selectedOrder.length) {
-                    slot.textContent = selectedOrder[index];
+                if (index < gameState.selectedOrder.length) {
+                    slot.textContent = gameState.selectedOrder[index];
                     slot.classList.add('filled');
                 } else {
                     slot.textContent = '?';
@@ -819,150 +1269,257 @@
 
         function updateCheckButton() {
             const checkBtn = document.getElementById('checkBtn');
-            checkBtn.disabled = selectedOrder.length !== correctOrder.length;
+            checkBtn.disabled = gameState.selectedOrder.length !== CONFIG.correctOrder.length;
         }
 
         function checkOrder() {
-            const messageBox = document.getElementById('messageBox');
-            const isCorrect = JSON.stringify(selectedOrder) === JSON.stringify(correctOrder);
+            try {
+                const messageBox = document.getElementById('messageBox');
+                const isCorrect = JSON.stringify(gameState.selectedOrder) === JSON.stringify(CONFIG.correctOrder);
 
-            if (isCorrect) {
-                messageBox.className = 'message-box success';
-                messageBox.textContent = '🎉 Perfect! You found the secret order!';
-                createConfetti();
-                setTimeout(createConfetti, 300);
-                setTimeout(createConfetti, 600);
-                setTimeout(() => {
-                    revealGrandMessage();
-                }, 1500);
-            } else {
-                messageBox.className = 'message-box error';
-                messageBox.textContent = '❌ Not quite right! Try again.';
-                displayCompliment();
+                if (isCorrect) {
+                    SoundManager.playSound('success');
+                    messageBox.className = 'message-box success';
+                    messageBox.textContent = '🎉 Perfect! You found the secret order!';
+                    createConfetti();
+                    setTimeout(createConfetti, 300);
+                    setTimeout(createConfetti, 600);
+                    Analytics.trackEvent('game_won', { attempts: gameState.iconClickCount });
+                    setTimeout(() => {
+                        revealGrandMessage();
+                    }, CONFIG.animationDelay);
+                } else {
+                    SoundManager.playSound('error');
+                    messageBox.className = 'message-box error';
+                    messageBox.textContent = '❌ Not quite right! Try again.';
+                    displayCompliment();
+                    Analytics.trackEvent('game_wrong_order', { selectedOrder: gameState.selectedOrder });
+                }
+            } catch (error) {
+                console.error('Error checking order:', error);
+                displayErrorMessage('An error occurred. Please try again.');
             }
         }
 
         function resetGame() {
-            selectedOrder = [];
-            document.getElementById('messageBox').className = 'message-box';
-            document.getElementById('messageBox').textContent = '';
-            createShuffledIcons();
-            updateOrderDisplay();
-            updateCheckButton();
-        }
-
-        function createConfetti() {
-            for (let i = 0; i < 15; i++) {
-                const confetti = document.createElement('div');
-                confetti.classList.add('confetti');
-                confetti.textContent = ['💕', '💖', '💗', '💓'][Math.floor(Math.random() * 4)];
-                confetti.style.left = Math.random() * 100 + '%';
-                confetti.style.top = '-20px';
-                confetti.style.fontSize = Math.random() * 15 + 15 + 'px';
-                confetti.style.opacity = Math.random() * 0.7 + 0.3;
-                document.body.appendChild(confetti);
-
-                setTimeout(() => confetti.remove(), 2500);
+            try {
+                gameState.selectedOrder = [];
+                document.getElementById('messageBox').className = 'message-box';
+                document.getElementById('messageBox').textContent = '';
+                createShuffledIcons();
+                updateOrderDisplay();
+                updateCheckButton();
+                Analytics.trackEvent('game_reset');
+            } catch (error) {
+                console.error('Error resetting game:', error);
             }
         }
 
         function displayCompliment() {
-            const compliment = getRandomItem(compliments);
-            const box = document.getElementById('complimentBox');
-            
-            document.getElementById('complimentEmoji').textContent = compliment.emoji;
-            document.getElementById('complimentText').textContent = compliment.text;
-            
-            box.classList.remove('hidden');
-            
-            box.style.animation = 'none';
-            setTimeout(() => {
-                box.style.animation = '';
-            }, 10);
+            try {
+                const compliment = getRandomItem(compliments);
+                const box = document.getElementById('complimentBox');
+                
+                document.getElementById('complimentEmoji').textContent = compliment.emoji;
+                document.getElementById('complimentText').textContent = compliment.text;
+                
+                box.classList.remove('hidden');
+                
+                box.style.animation = 'none';
+                setTimeout(() => {
+                    box.style.animation = '';
+                }, 10);
+            } catch (error) {
+                console.error('Error displaying compliment:', error);
+            }
+        }
+
+        function createConfetti() {
+            try {
+                for (let i = 0; i < 15; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.classList.add('confetti');
+                    confetti.textContent = ['💕', '💖', '💗', '💓'][Math.floor(Math.random() * 4)];
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.top = '-20px';
+                    confetti.style.fontSize = Math.random() * 15 + 15 + 'px';
+                    confetti.style.opacity = Math.random() * 0.7 + 0.3;
+                    document.body.appendChild(confetti);
+
+                    setTimeout(() => confetti.remove(), 2500);
+                }
+            } catch (error) {
+                console.error('Error creating confetti:', error);
+            }
         }
 
         function revealGrandMessage() {
-            const grandMessage = document.getElementById('grandMessage');
-            grandMessage.classList.add('active');
-            createConfetti();
-            setTimeout(createConfetti, 300);
-            setTimeout(createConfetti, 600);
+            try {
+                const grandMessage = document.getElementById('grandMessage');
+                const grandText = document.getElementById('grandText');
+                grandText.innerHTML = `
+                    My sunshine ☀️ in the morning light,<br>
+                    My princess 🏰 in the softest night.<br>
+                    My spice 🌶️ that makes my spirit sing,<br>
+                    With you, my heart finds everything.<br>
+                    <br>
+                    My celebration 🍸 in all I do,<br>
+                    Katie… every road leads back to you.<br>
+                    You're all I need, you're all I see,<br>
+                    The missing piece that completes me.<br>
+                    <br>
+                    So here I stand, heart on the line…<br>
+                    Katie, will you be my Valentine? ❤️
+                `;
+                grandMessage.classList.add('active');
+                Analytics.trackEvent('grand_message_shown');
+            } catch (error) {
+                console.error('Error revealing grand message:', error);
+            }
         }
 
         function handleYes(style) {
-            const responses = {
-                enthusiastic: {
-                    emoji: '🎉',
-                    text: 'I knew it! You\'re the best! 💖'
-                },
-                sassy: {
-                    emoji: '💃',
-                    text: 'Of course you said yes. I\'m irresistible! 😎'
-                },
-                dramatic: {
-                    emoji: '👑',
-                    text: 'YES! You\'ve made me the happiest person alive! 🌟'
-                }
-            };
-
-            const response = responses[style];
-            const grandMessage = document.getElementById('grandMessage');
-            const grandContent = grandMessage.querySelector('.grand-content');
-            
-            // Update content
-            grandContent.innerHTML = `
-                <div class="grand-emoji">${response.emoji}</div>
-                <div class="grand-title">YES! 💕</div>
-                <div class="grand-text">${response.text}</div>
-                <button class="close-grand" onclick="startDanceParty()">Let's Celebrate! 🎊</button>
-            `;
-            
-            createConfetti();
-            setTimeout(createConfetti, 300);
-            setTimeout(createConfetti, 600);
-            setTimeout(createConfetti, 900);
+            try {
+                const response = yesResponses[style];
+                const grandMessage = document.getElementById('grandMessage');
+                const grandContent = grandMessage.querySelector('.grand-content');
+                
+                grandContent.innerHTML = `
+                    <div class="grand-emoji">${response.emoji}</div>
+                    <div class="grand-title">YES! 💕</div>
+                    <div class="grand-text">${response.text}</div>
+                    <button class="close-grand" onclick="startDanceParty()">Let's Celebrate! 🎊</button>
+                `;
+                
+                SoundManager.playSound('success');
+                createConfetti();
+                setTimeout(createConfetti, 300);
+                setTimeout(createConfetti, 600);
+                setTimeout(createConfetti, 900);
+                Analytics.trackEvent('valentine_answered', { answerStyle: style });
+            } catch (error) {
+                console.error('Error handling yes:', error);
+            }
         }
 
         function startDanceParty() {
-            const grandMessage = document.getElementById('grandMessage');
-            const celebrationDance = document.getElementById('celebrationDance');
-            
-            grandMessage.classList.remove('active');
-            celebrationDance.classList.add('active');
-            
-            // Create extra confetti
-            for (let i = 0; i < 3; i++) {
-                setTimeout(createConfetti, i * 400);
+            try {
+                const grandMessage = document.getElementById('grandMessage');
+                const celebrationDance = document.getElementById('celebrationDance');
+                
+                grandMessage.classList.remove('active');
+                celebrationDance.classList.add('active');
+                
+                for (let i = 0; i < 3; i++) {
+                    setTimeout(createConfetti, i * 400);
+                }
+                
+                setTimeout(() => {
+                    celebrationDance.classList.remove('active');
+                    showFinalMessage();
+                }, 3500);
+            } catch (error) {
+                console.error('Error starting dance party:', error);
             }
-            
-            // Show final message after dance
-            setTimeout(() => {
-                celebrationDance.classList.remove('active');
-                showFinalMessage();
-            }, 3500);
         }
 
         function showFinalMessage() {
-            const finalMessage = document.getElementById('finalMessage');
-            finalMessage.classList.add('active');
-            
-            // Lock the game - disable all interactions
-            document.body.classList.add('game-locked');
-            
-            // Extra confetti for final message
-            createConfetti();
-            setTimeout(createConfetti, 300);
-            setTimeout(createConfetti, 600);
+            try {
+                const finalMessage = document.getElementById('finalMessage');
+                finalMessage.classList.add('active');
+                
+                document.body.classList.add('game-locked');
+                
+                createConfetti();
+                setTimeout(createConfetti, 300);
+                setTimeout(createConfetti, 600);
+                Analytics.trackEvent('final_message_shown');
+            } catch (error) {
+                console.error('Error showing final message:', error);
+            }
         }
 
-        function closeGrandMessage() {
-            document.getElementById('grandMessage').classList.remove('active');
-            resetGame();
+        function displayErrorMessage(message) {
+            const messageBox = document.getElementById('messageBox');
+            messageBox.className = 'message-box error';
+            messageBox.textContent = message;
         }
 
-        // Initialize
-        createShuffledIcons();
-        updateOrderDisplay();
+        /**
+         * MODAL CLOSE ON OVERLAY CLICK
+         */
+        document.getElementById('modalOverlay').addEventListener('click', closeModal);
+
+        /**
+         * KEYBOARD NAVIGATION
+         */
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        /**
+         * INITIALIZATION
+         */
+        window.addEventListener('load', function() {
+            try {
+                gameState.gameStartTime = new Date();
+                createShuffledIcons();
+                updateOrderDisplay();
+                Analytics.trackEvent('game_started');
+                
+                // Hide loading screen
+                document.querySelector('.loading-screen').style.display = 'none';
+            } catch (error) {
+                console.error('Initialization error:', error);
+                displayErrorMessage('An error occurred initializing the game. Please refresh the page.');
+            }
+        });
+
+        /**
+         * ERROR HANDLING
+         */
+        window.addEventListener('error', function(event) {
+            console.error('Global error:', event.error);
+            Analytics.trackEvent('javascript_error', { message: event.error?.message });
+        });
+
+        /**
+         * ACCESSIBILITY: FOCUS MANAGEMENT
+         */
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Tab') {
+                document.body.style.outlineOffset = '-2px';
+            }
+        });
+
+        /**
+         * PERFORMANCE: LOG PAGE LOAD TIME
+         */
+        window.addEventListener('load', function() {
+            if (performance.timing) {
+                const pageLoadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
+                Analytics.trackEvent('page_load_time', { time: pageLoadTime });
+            }
+        });
+    </script>
+
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Will You Be My Valentine?",
+        "description": "Interactive Valentine's Day game where you arrange icons to reveal a romantic proposal",
+        "url": "https://valentine-game.example.com",
+        "applicationCategory": "Game",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
     </script>
 </body>
 </html>
