@@ -478,6 +478,14 @@
             letter-spacing: 0.5px;
         }
 
+        .developer-credit .coming-soon {
+            font-size: 1em;
+            color: #ff1493;
+            margin-top: 15px;
+            font-style: italic;
+            font-weight: 500;
+        }
+
         @media (max-width: 600px) {
             .final-content {
                 padding: 50px 30px;
@@ -630,7 +638,7 @@
 <body>
     <div class="container">
         <h1>💐 Click the Icons</h1>
-        <p class="subtitle">Arrange them in the correct order to reveal a special message...</p>
+        <p class="subtitle">Put the icons in the right order to find the secret! 💕</p>
 
         <div class="compliment-box hidden" id="complimentBox">
             <div class="compliment-emoji" id="complimentEmoji"></div>
@@ -639,7 +647,7 @@
 
         <div class="game-section">
             <div class="game-title">🎮 Secret Order Game</div>
-            <p class="order-info">Arrange the icons in the correct order and then check!</p>
+            <p class="order-info">Click the icons in the right order!</p>
 
             <div class="order-display" id="orderDisplay">
                 <div class="order-slot">?</div>
@@ -675,14 +683,13 @@
             <div class="final-title">Game Over!</div>
             <div class="final-subtitle">You Said Yes!</div>
             <div class="final-text">
-                <strong>You are now my Valentine! 💕</strong>
+                <strong>You said YES! You're my Valentine! 💕</strong>
                 <br><br>
-                Forever starts today with you. 
-                <br>
-                Thank you for playing this game created with love by me for you. 💖
+                Forever starts today. Thank you for playing this game. I made it just for you! 💖
             </div>
             <div class="developer-credit">
-                <p>💜 Made with ❤️ for someone special</p>
+                <p>Made with 💕 just for you</p>
+                <p class="coming-soon">✨ Next part coming February 14, 2027 ✨</p>
             </div>
         </div>
     </div>
@@ -692,7 +699,7 @@
             <div class="grand-emoji">💕</div>
             <div class="grand-title">Will You Be My Valentine?</div>
             <div class="grand-text">
-                You're the sunshine that brightens my days, the castle of my dreams, the spice that makes life exciting, and the celebration of every moment together. And "K" is for the kiss I want to give you right now.
+                You're my sunshine, my castle, my spice, and my celebration. And "K" is for the kiss I want to give you.
                 <br><br>
                 <strong>Will you be my Valentine? ❤️</strong>
             </div>
@@ -710,21 +717,21 @@
         let selectedOrder = [];
 
         const compliments = [
-            { emoji: '💕', text: 'You\'re my favorite kind of love!' },
-            { emoji: '💖', text: 'My heart skips a beat when I think of you!' },
-            { emoji: '💗', text: 'You\'re the love of my life!' },
-            { emoji: '💝', text: 'With you, every moment feels like Valentine\'s Day!' },
-            { emoji: '💞', text: 'Our love is my favorite adventure!' },
-            { emoji: '💓', text: 'You make my heart race in the best way!' },
+            { emoji: '💕', text: 'You\'re my favorite person!' },
+            { emoji: '💖', text: 'You make my heart so happy!' },
+            { emoji: '💗', text: 'You\'re the one I love!' },
+            { emoji: '💝', text: 'With you, every day is special!' },
+            { emoji: '💞', text: 'Being with you is so much fun!' },
+            { emoji: '💓', text: 'You make me smile every day!' },
             { emoji: '💑', text: 'You\'re my forever person!' },
-            { emoji: '💏', text: 'You\'re worth every love song ever written!' },
-            { emoji: '💗', text: 'Being with you is pure bliss!' },
-            { emoji: '✨', text: 'You\'re my greatest love story!' },
-            { emoji: '💕', text: 'Every day with you is a gift wrapped in love!' },
-            { emoji: '💖', text: 'You complete me in every way!' },
-            { emoji: '🌹', text: 'You\'re more beautiful than a thousand roses!' },
-            { emoji: '💝', text: 'I\'m madly, deeply, completely in love with you!' },
-            { emoji: '💓', text: 'You\'re the reason my heart believes in love!' }
+            { emoji: '💏', text: 'You\'re so worth loving!' },
+            { emoji: '💗', text: 'Being with you feels perfect!' },
+            { emoji: '✨', text: 'You\'re my best love story!' },
+            { emoji: '💕', text: 'Every day with you is amazing!' },
+            { emoji: '💖', text: 'You\'re everything to me!' },
+            { emoji: '🌹', text: 'You\'re so beautiful!' },
+            { emoji: '💝', text: 'I love you so much!' },
+            { emoji: '💓', text: 'You make my heart believe in love!' }
         ];
 
         function getRandomItem(array) {
